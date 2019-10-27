@@ -27,11 +27,15 @@ The only addition to classic OOP code style with virtual functions (but extremel
 On the other hand, hundreds of large and small features are added to other code styles over the years.
 Modern C++ encourages developer to take compile time decisions whenever possible. This is connected to narrow modern niche of C++ to be the most performant high level programming language.
 
-Which coding style to choose? Select one where you can express your task in most elegant, short and readable form, but also able to provide unit tests. In most cases this means to skip metaprogramming (unless it reduces code repetition) and skip harware explicit style (unless you measured other approach with profiler first).
+### Which coding style to choose? 
+Which you feel is most elegant, short and readable for given task.
+But beware that you have been able to cover it with unit tests.
 
-# To a better code
+In most cases this means to skip metaprogramming (unless it reduces code repetition) and skip harware explicit style (unless you measured other approach with profiler first).
 
-## Quick wins
+# Toward a better code
+
+## Some quick wins
 
 ### auto
 * Use auto to reduce typing and easy reading, like to hold temporary iterator
@@ -43,31 +47,13 @@ bool HasAsdInAsd(const PE::XyzCalculator::AsdContainer& vec)
   iter = vec.find("Asd");
   if(iter != vec.end())
   {
-    InfoLog << "Not Found asd";
-    return false;
-  }
-  else
-  {
-    InfoLog << "Found asd: " << *iter->second;
-    return true;
-  }
-}
-
+   ...
 //--------- New style
 bool HasAsdInAsd(const PE::XyzCalculator::AsdContainer& vec)
 {
   if(const auto iter = vec.find("Asd"); iter != vec.end())
   {
-    InfoLog << "Found asd: " << *iter->second;
-    return true;
-  }
-  else
-  {
-    InfoLog << "Not Found asd";
-    return false;
-  }
-}
-
+   ...
 ```
 * Use auto in lambda parameters to conserve on typing.
 ```C++
@@ -122,3 +108,58 @@ else
    pCfg->Initialize();
 }
 ```
+### =default and =delete
+In new standard you can explicitly re-use compiler default implementation for constructor, destructor or assignment operator, which will be most optimal for most data types.
+```C++
+// item.cpp
+Myclass::Myclass() = default; // generates all constuction code for Myclass once into item.obj
+
+
+// item.h
+class Myclass:
+{
+  public:
+  MyClass();
+  ~MyClass() = default; // generated destructor code will be inlined into each caller obj-file
+};
+```
+Now you can explicitly delete any default-constructed method, which is better analogue to old trick of moving it's definition into protected/private method.
+```C++
+class NonCopiable:
+{
+  public:
+    NonCopiable(const NonCopiable&) = delete;
+    NonCopiable& operator=(const NonCopiable&) = delete;  
+};
+```
+Note that beside copy ctor/assignment starting from C++11 there is also move ctor/assignment operators. But usually you don't have to block it as nothing bad should happen if you move entire object (unless it is extremely exotic, which is bad).
+
+### Initialization in class definition
+```C++
+// old.cpp
+MyClass::MyClass(): m_pi(3.14), m_p(4), m_dblDelta(0.), m_dblAlpha(m_dblDelta)
+{ m_finish = false;}
+```
+Code like above is tedious and error prone. Looking just at it you have no idea if you safe from uninitialized members or not.
+Also you have no idea what is the order of initialization. 50/50 that `m_dblAlpha(m_dblDelta)` is plain error.
+```C++
+// new.cpp
+MyClass::MyClass() = default;
+
+// new.h
+class MyClass
+{
+...
+ bool m_start{}, m_finish{};
+ double m_dblAlpha{};
+ double m_pi{3.14};
+ int m_p{4};
+ double m_dblDelta{};
+};
+```
+In new C++ curly brackets {} used to initialize and construct entities. Empty curly brackets will default initialize (with zero).
+Construction m_p{3.14} will not compile as curly brackets also check for correct type (m_p is int, so probably you wanted to initialize m_pi with 3.14 instead).
+
+It is very easy to see during code review if everything is initialized or not as both definition and default initialization provided in one place.
+Note: another new feature to shorten constructors code is Delegating Constructor. Basically, you can call one constructor from another if you need. Look it up if you going to provide several constructors for a class. https://en.cppreference.com/w/cpp/language/initializer_list#Delegating_constructor
+
