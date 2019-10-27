@@ -442,3 +442,23 @@ byte
 operator <=>
 std::span
 Signed Integers are Two’s Complement
+
+# Toward a better delivery: tooling
+
+## Static code analysis
+
+## Sanitizers
+
+## Unit tests
+
+## Benchmarks, instrumentation
+
+## Cross-compilation
+
+## Containerization
+
+## Tools know-how
+Visual Studio sounds
+TortoiseGit rebase
+VS Code as editor
+.natvis
