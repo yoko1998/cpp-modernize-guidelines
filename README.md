@@ -13,17 +13,17 @@ C++ is a general purpose language but nowadays it exclusively took a niche to pr
 
 ## On a coding styles
 C++ is actually not one language, but **a collection of different languages** under one roof. You have to choose coding style properly for a given task.
-* Smalltalk/OOP: classic style OOP based virtual inheritance. To achive a goal, you abstract domain into series of class hierarchies, widely employing inheritance, polymorphism and encapsulation. The focus is on a tight coupling data and behaviour in a class(es). (This considered to be too wordy and too slow to be perfect solution for everything.)
-* Metaprogramming: you focus on behaviour and use templates to abstract from exact data processed. A good library implemened in templates (e.g. STL, Boost) is precious. The main problem is slightest mistakes producing unreadable waterfall of errors. Despite of that, true professionals dare to walk the dangerous waters and often got back best performance-critical and optimizer-friendly code out there. 
+* `Smalltalk/OOP`: classic style OOP based virtual inheritance. To achive a goal, you abstract domain into series of class hierarchies, widely employing inheritance, polymorphism and encapsulation. The focus is on a tight coupling data and behaviour in a class(es). (This considered to be too wordy and too slow to be perfect solution for everything.)
+* `Metaprogramming`: you focus on behaviour and use templates to abstract from exact data processed. A good library implemened in templates (e.g. STL, Boost) is precious. The main problem is slightest mistakes producing unreadable waterfall of errors. Despite of that, true professionals dare to walk the dangerous waters and often got back best performance-critical and optimizer-friendly code out there. 
   * We could join the train soon, after moving to VS2019 which already supports C++20 Concepts (v16.3). Basicaly concepts is a method to greatly improve templates behaviour and most importantly produce user-friendly error codes. https://devblogs.microsoft.com/cppblog/c20-concepts-are-here-in-visual-studio-2019-version-16-3/ . Without Concepts support, I do not recommend metaprogramming on a daily basis.
   * Macroes also jumps into metaprogramming category, as not everything could be expressed in templates up to date, and we still using them even when shouldn't as macroes are **addictive**. C++20 will provide **std::source_location** to cover some logging usecases.
-* Generic programming: metaprogramming but not with templates and not with macros. In each new C++ version you could do more and more just employing **auto** in code, function declarations and lambdas. Also consider possibility to calculate things in compile time with **constexpr**. This code easy to read, easy to maintain and error logs are readable.
+* `Generic programming`: metaprogramming but not with templates and not with macros. In each new C++ version you could do more and more just employing **auto** in code, function declarations and lambdas. Also consider possibility to calculate things in compile time with **constexpr**. This code easy to read, easy to maintain and error logs are readable.
   * Each C++ release things you could do with auto and consexpr become wider and more powerful. (In C++20 if, for, all STL algorightms, dynamic allocations, smart pointers are supporting constexpr. Additionally added consteval.) https://youtu.be/9YWzXSr2onY
   * std::variant and std::any now available to store data in generic way and easier implement such algorithms as state machines.
-* Functional programming: writing functions that never mutate existing data (but optionally producing new data as output) you make code extremely testable, composable and reusable, and resulting program behaviour stable and predictable. This approach elevates your code as close as possible to a pure elegance of mathematics.
-* Hardware explicit: modern C++ made a leap forward to embrace actual hardware. Memory barriers, allocators, alignment, [[likely]], threads and more. You could use all the tricks to produce extremely performant code, like vectorization, static dispatch, lock-free containers etc. Most importantly, tools are matured to assess, diagnose and test such code, including compiler introspection (godbolt.org), benchmarks (like google bench), and other tools to extract such information like missed branch predictions.
+* `Functional programming`: writing functions that never mutate existing data (but optionally producing new data as output) you make code extremely testable, composable and reusable, and resulting program behaviour stable and predictable. This approach elevates your code as close as possible to a pure elegance of mathematics.
+* `Hardware explicit`: modern C++ made a leap forward to embrace actual hardware. Memory barriers, allocators, alignment, [[likely]], threads and more. You could use all the tricks to produce extremely performant code, like vectorization, static dispatch, lock-free containers etc. Most importantly, tools are matured to assess, diagnose and test such code, including compiler introspection (godbolt.org), benchmarks (like google bench), and other tools to extract such information like missed branch predictions.
 
-The only addition to classic OOP code style with virtual functions (but extremely valuable) is **override** keyword.
+The only addition to classic OOP code style with virtual functions (but extremely valuable) is `override` keyword.
 On the other hand, hundreds of large and small features are added to other code styles over the years.
 Modern C++ encourages developer to take compile time decisions whenever possible. This is connected to narrow modern niche of C++ to be the most performant high level programming language.
 
@@ -55,6 +55,8 @@ bool HasAsdInAsd(const PE::XyzCalculator::AsdContainer& vec)
   {
    ...
 ```
+see also "Initializer in `if`" section.
+
 * Use auto in lambda parameters to conserve on typing.
 ```C++
 //--------- motivational examples
@@ -96,6 +98,7 @@ for(const auto&[title, config]: configCache.at(42))
 }
 ```
 Note: old style sample has mistake in interation which is impossible to make in new style.
+Note2: In same way you could unpack not only std::pair, but any custom structures as well, for example `FILETIME`, but it is less practical.
 
 * Use structural bindings with specific STL algorithms and container methods.
 ```C++
@@ -163,3 +166,54 @@ Construction m_p{3.14} will not compile as curly brackets also check for correct
 It is very easy to see during code review if everything is initialized or not as both definition and default initialization provided in one place.
 Note: another new feature to shorten constructors code is Delegating Constructor. Basically, you can call one constructor from another if you need. Look it up if you going to provide several constructors for a class. https://en.cppreference.com/w/cpp/language/initializer_list#Delegating_constructor
 
+### Initialization in `if` statement
+New C++ adds optional section into `if` which is indentical to first section in `for` operator. 
+You could do some calculations there or declare a variable that would be visible during entire if...else... operation, but not visible outside.
+```C++
+// motivational examples
+
+if(auto w = testName.find("DISABLED"); w != testName.end()) cout << testName;
+
+if(auto shared = weakptr.lock(); shared) shared->callback(this);
+
+if(std::lock_guard<std::mutex> lk(mx_); v.empty()) v.push_back(kInitialValue);
+
+if(char buf[10]; std::fgets(buf, 10, stdin)) { m[0] += buf; }
+```
+Note: Similar section now also available for `switch` and `while` operators.
+
+### Defining constants in class definitions
+In old C++ there are several typical methods to have a class constant:
+```C++
+
+#define variable1 42
+
+class MyClass
+{
+
+   static const int variable2;
+   // in some .cpp file: const int MyClass::variable2 = 42
+
+   const int getVariable3a() const { return 42;}
+
+   static const int getVariable3b() { return 42;}
+   
+   enum SomeEnum
+   {
+    variable4 = 42;
+   };
+  
+```
+All variants are ugly in each unique way.
+
+New C++ offers inline variables to the resque:
+```C++
+inline constexpr int val1 = 42;
+
+inline int getVal2() { return 42; }
+
+class MyClass
+{
+  static /*inline*/ constexpr int val2 = 42; // static+consexpr is implicitly inline
+```
+Roughly how it works is allowing compiler to have this thing duplicated in source code; then telling linker to eliminate duplication.
