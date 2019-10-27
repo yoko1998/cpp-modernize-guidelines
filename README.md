@@ -515,4 +515,12 @@ include-what-you-using
 # Coding guidelines
 
 ## Existing major coding guidelines
+TBD
 
+## What would be the median
+TBD
+
+# References
+TBD
+
+https://youtu.be/QpFjOlzg1r4 C++ Weekly - Ep 190 - The Important Parts of C++17 in 10 Minutes
