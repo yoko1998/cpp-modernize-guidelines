@@ -1,5 +1,9 @@
-# cpp-code-guidelines
 Some guidelines for the project just moved from c++03 to c++17
+# Table of contents
+[General considerations]
+[Toward a better code: quick wins]
+[Toward a better code: steady improvement]
+[Toward a better delivery: tooling]
 
 # General considerations
 
@@ -288,6 +292,31 @@ std::string MyClas::GetLastError() const
 Important new features that we also should use, but which benefit us in a longer timespan.
 These changes are improving code correctness, improving performance, eliminating risks, improve readability, lessen code repetition.
 
+## C++ Core Guideliness
+http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines contains extensive list of rules and best practices, created by prominent C++ figures (Bjarne Stroustrup, Herb Sutter, Scott Meyers, Titus Winters, Michael Park etc.) and covers most engineering choices you would want to made. Examples:
+* F.7: For general use, take T* or T& arguments rather than smart pointers
+* R.30: Take smart pointers as parameters only to explicitly express lifetime semantics
+* F.8: Prefer pure functions
+* F.9: Unused parameters should be unnamed
+* F.20: For “out” output values, prefer return values to output parameters
+* F.43: Never (directly or indirectly) return a pointer or a reference to a local object
+* I.5: State preconditions (if any)
+* I.25: Prefer abstract classes as interfaces to class hierarchies
+* C.4: Make a function a member only if it needs direct access to the representation of a class
+* R.1: Manage resources automatically using resource handles and RAII (Resource Acquisition Is Initialization)
+* R.23: Use make_unique() to make unique_ptrs
+* ES.20: Always initialize an object
+* ES.21: Don’t introduce a variable (or constant) before you need to use it
+* ES.22: Don’t declare a variable until you have a value to initialize it with
+* ES.23: Prefer the {}-initializer syntax
+* ES.71: Prefer a range-for-statement to a for-statement when there is a choice
+* CPL.1: Prefer C++ to C
+* SF.7: Don’t write using namespace at global scope in a header file
+* SF.11: Header files should be self-contained
+* Appendix B: Modernizing code
+
+When in doubt, check Core Guideliness.
+
 ## Unit tests
 * We have to protect business value of our code using different types of regression testing, and Unit Testing is important layer of it.
 * Just keeping Unit Testing in mind immediately producing better modular and less entangled code.
@@ -464,6 +493,7 @@ VS
 ## Sanitizers
 ASan
 UBSan
+TSan
 
 ## Benchmarks, instrumentation
 
@@ -480,3 +510,8 @@ Visual Studio sounds
 TortoiseGit rebase
 resharper / visual assit, refactoring
 incredibuild
+
+# Coding guidelines
+
+## Existing major coding guidelines
+
