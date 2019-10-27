@@ -510,6 +510,7 @@ Visual Studio sounds
 TortoiseGit rebase
 resharper / visual assit, refactoring
 incredibuild
+include-what-you-using
 
 # Coding guidelines
 
