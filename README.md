@@ -288,6 +288,17 @@ std::string MyClas::GetLastError() const
 Important new features that we also should use, but which benefit us in a longer timespan.
 These changes are improving code correctness, improving performance, eliminating risks, improve readability, lessen code repetition.
 
+## Unit tests
+* We have to protect business value of our code using different types of regression testing, and Unit Testing is important layer of it.
+* Just keeping Unit Testing in mind immediately producing better modular and less entangled code.
+* Allows to speed up development of separate code modules by providing a quick jump into module from unit tests.
+* Having code UT-ready also could make micro-benchmarking easy.
+
++ mocking
++ common testing model, other layers of testing (see also Static Code Analysis)
++ replaying
++ fuzzing
+
 ## override
 Keyword `override` is a must use for all overrides of virtual functions. This enables compiler to report errors in compile time when signature of function is actually not compatible with function overloaded. Old C++ just allowed unpredicted behavior of program in run-time instead (when called not the function you expected).
 Note: using `clang-tidy` or similar static code analyser it is possible to automatically update our code fitting `override` whenever necessary. After that we could continue manually support this habit, while time-to-time checking any misses using the tool again.
@@ -446,10 +457,13 @@ Signed Integers are Two’s Complement
 # Toward a better delivery: tooling
 
 ## Static code analysis
+clang-tidy
+coverity
+VS
 
 ## Sanitizers
-
-## Unit tests
+ASan
+UBSan
 
 ## Benchmarks, instrumentation
 
@@ -458,7 +472,11 @@ Signed Integers are Two’s Complement
 ## Containerization
 
 ## Tools know-how
-Visual Studio sounds
-TortoiseGit rebase
 VS Code as editor
 .natvis
+.clang-format
+godbolt.org
+Visual Studio sounds
+TortoiseGit rebase
+resharper / visual assit, refactoring
+incredibuild
