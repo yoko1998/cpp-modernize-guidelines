@@ -1,6 +1,6 @@
 Some guidelines for the project just moved from c++03 to c++17
 # Table of contents
-[General considerations]
+[General considerations](#general-considerations)
 [Toward a better code: quick wins]
 [Toward a better code: steady improvement]
 [Toward a better delivery: tooling]
