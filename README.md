@@ -1,9 +1,20 @@
 Some guidelines for the project just moved from c++03 to c++17
+
 # Table of contents
-[General considerations](#general-considerations)
-[Toward a better code: quick wins]
-[Toward a better code: steady improvement]
-[Toward a better delivery: tooling]
+* [General considerations](#general-considerations)
+* [Toward a better code: quick wins](#toward-a-better-code-quick-wins)
+  - [`auto`](#auto)
+  - [ranged `for`](#ranged-for)
+  - [Structural bindings](#structural-bindings)
+  - [`=default` and `=delete`](#default-and-delete)
+  - [Initialization in class definition](#initialization-in-class-definition)
+  - [Initialization in `if` statement](#initialization-in-if-statement)
+  - [Defining constants in class definitions](#defining-constants-in-class-definitions)
+  - [Structural initialization](#structural-initialization)
+* [Toward a better code: steady improvement](#toward-a-better-code-steady-improvement)
+* [Toward a better delivery: tooling](#toward-a-better-delivery-tooling)
+* [Coding guidelines](#coding-guidelines)
+* [References](#references)
 
 # General considerations
 
@@ -40,7 +51,7 @@ In most cases, this means to skip metaprogramming (unless it reduces code repeti
 # Toward a better code: quick wins
 Following are, probably, most simple things that made immediate impact on code readability and simplicity.
 
-## auto
+## `auto`
 * Use auto to reduce typing and easy reading, like to hold the temporary iterator
 ```C++
 //--------- Old style
@@ -89,7 +100,7 @@ auto toInsert = std::map<std::string, XCalculator>::value{};
 
 (!) Note: **auto** is replacing type, but not it's **traits** (constness, reference). Please don't forget to write **const** and **&** when necessary. If you don't want to think much, use **auto&&** - this means "the same const as input container" and symbol && when next to auto called "forwarding reference".
 
-## ranged for
+## ranged `for`
 Instead of cumbersome and tedious specification of begin and end of container, now you could just specify container itself.
 ```C++
 auto intvec = std::vector<int>{1, 2, 3, 4, 5};
@@ -137,7 +148,7 @@ void f(std::string_view id, std::unique_ptr<Foo> foo) {
 }
 ```
 
-## =default and =delete
+## `=default` and `=delete`
 In new standard you can explicitly re-use compiler default implementation for constructor, destructor or assignment operator, which will be most optimal for most data types.
 ```C++
 // item.cpp
