@@ -21,10 +21,14 @@ Some guidelines for the project just moved from c++03 to c++17
 ## When to C++
 C++ is a general-purpose language but nowadays it exclusively took a niche to provide the best possible performance (CPU load wise, size-wise, battery usage wise, core load wise etc). C++ developer considered to be a professional and to know what exactly he doing. If you have a choice and your tasks are not demanding, **you better stop using C++ and use Python instead**.
 
+![Machinery](https://cdn.newsapi.com.au/image/v1/dcd824fc138685b36b04b4849959df69?width=650)
+
 ## Best code
 * C++ core and compiler code optimizers working, as a rule of thumb, in a way that the **simpler code you write**, the better results you get.
 ** Exception: operations that known to be a pessimization of code, like an unnecessary copy of input parameters or unnecessary heap allocations. (Even in this case, optimizing compiler will try to lend you a hand if your code is simple and obvious.)
 * Make code as readable as rationally possible. Mind the rule that "code is written one time, but read a hundred times", so optimize for readers.
+
+![A-maze-ing!](https://images-cdn.9gag.com/photo/aP99rAR_460s.jpg)
 
 ## On coding styles
 C++ is not one language but **a collection of different languages** under one roof. You have to choose a coding style properly for a given task.
@@ -47,6 +51,8 @@ Which you feel is most elegant, short and readable for the given task.
 But beware that you have been able to cover it with unit tests.
 
 In most cases, this means to skip metaprogramming (unless it reduces code repetition) and skip hardware explicit style (unless you measured other approaches with profiler first).
+
+![Unique style](http://www.polarityrecords.com/uploads/7/9/7/0/7970819/4779509.jpg?696)
 
 # Toward a better code: quick wins
 Following are, probably, most simple things that made immediate impact on code readability and simplicity.
@@ -308,6 +314,8 @@ std::string MyClas::GetLastError() const
   return {}; // this replaces std::string();
 ...
 ```
+
+![A 19th-Century Vision of the Year 2000](https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/France_in_XXI_Century._School.jpg/800px-France_in_XXI_Century._School.jpg)
 
 
 # Toward a better code: steady improvement
