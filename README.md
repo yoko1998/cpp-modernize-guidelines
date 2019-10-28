@@ -22,7 +22,7 @@ Some guidelines for the project just moved from c++03 to c++17
 C++ is a general-purpose language but nowadays it exclusively took a niche to provide the best possible performance (CPU load wise, size-wise, battery usage wise, core load wise etc). C++ developer considered to be a professional and to know what exactly he doing. If you have a choice and your tasks are not demanding, **you better stop using C++ and use Python instead**.
 
 ## Best code
-* C++ core and compiler code optimizers working, as a rule of thumb, in a way that the **simplest code you write**, the best results you get. 
+* C++ core and compiler code optimizers working, as a rule of thumb, in a way that the **simpler code you write**, the better results you get.
 ** Exception: operations that known to be a pessimization of code, like an unnecessary copy of input parameters or unnecessary heap allocations. (Even in this case, optimizing compiler will try to lend you a hand if your code is simple and obvious.)
 * Make code as readable as rationally possible. Mind the rule that "code is written one time, but read a hundred times", so optimize for readers.
 
@@ -30,10 +30,10 @@ C++ is a general-purpose language but nowadays it exclusively took a niche to pr
 C++ is not one language but **a collection of different languages** under one roof. You have to choose a coding style properly for a given task.
 * `Smalltalk/OOP`: classic style OOP based virtual inheritance. To achieve a goal, you abstract domain into a series of class hierarchies, widely employing inheritance, polymorphism, and encapsulation. The focus is on a tight coupling data and behavior in a class(es). (This considered to be too wordy and too slow to be a perfect solution for everything.)
 * `Metaprogramming`: you focus on behavior and use templates to abstract from exact data processed. A good library implemented in templates (e.g. STL, Boost) is precious. The main problem is the slightest mistakes producing an unreadable waterfall of errors. Despite that, true professionals dare to walk the dangerous waters and often got back the best performance-critical and optimizer-friendly code out there. 
-  * We could join the train soon, after moving to VS2019 which already supports C++20 Concepts (v16.3). Simply speaking, Concepts is a method to greatly improve templates behavior and most importantly produce user-friendly error codes. https://devblogs.microsoft.com/cppblog/c20-concepts-are-here-in-visual-studio-2019-version-16-3/ . Without Concepts support, I do not recommend metaprogramming daily.
+  * We could join the train soon, after moving to VS2019 which already supports C++20 Concepts (v16.3). Simply speaking, Concepts is a method to greatly improve templates behavior and most importantly produce user-friendly error codes. See [C++20 Concepts are here...][]. Without Concepts support, I do not recommend metaprogramming daily.
   * Macros also jumps into the metaprogramming category, as not everything could be expressed in templates up to date, and we still using them even when shouldn't as macros are **addictive**. C++20 will provide **std::source_location** to cover some logging use cases.
 * `Generic programming`: metaprogramming but not with templates and not with macros. In each new C++ version you could do more and more just employing `auto` in code, function declarations and lambdas. Also, consider the possibility to calculate things in compile time with `constexpr`. This code easy to read, easy to maintain and error logs are readable.
-  * Each C++ release things you could do with auto and constexpr become wider and more powerful. (In C++20 if, for, all STL algorithms, dynamic allocations, smart pointers are supporting constexpr. Additionally added `consteval`.) https://youtu.be/9YWzXSr2onY
+  * Each C++ release things you could do with auto and constexpr become wider and more powerful. (In C++20 if, for, all STL algorithms, dynamic allocations, smart pointers are supporting constexpr. Additionally added `consteval`.)
   * std::variant and std::any now available to store data generically and easier implement such algorithms as state machines.
 * `Functional programming`: writing functions that never mutate existing data (but optionally producing new data as output) you make code extremely testable, composable and reusable, and resulting program behavior stable and predictable. This approach elevates your code as close as possible to a pure elegance of mathematics.
 * `Hardware explicit`: modern C++ made a leap forward to embrace actual hardware. Memory barriers, allocators, alignment, [[likely]], threads and more. You could use all the tricks to produce extremely performant code, like vectorization, static dispatch, lock-free containers, hardware_constructive_interference_size, etc. Most importantly, tools are matured to assess, diagnose and test such code, including compiler introspection (godbolt.org), benchmarks (like google bench), and other tools to extract such information like missed branch predictions.
@@ -201,7 +201,7 @@ In new C++ curly brackets {} used to initialize and construct entities. Empty cu
 Construction m_p{3.14} will not compile as curly brackets also check for correct type (m_p is int, so probably you wanted to initialize m_pi with 3.14 instead).
 
 It is very easy to see during code review if everything is initialized or not as both definitions and default initialization provided in one place.
-Note: another new feature to shorten constructors code is Delegating Constructor. You can call one constructor from another if you need it. Look it up if you going to provide several constructors for a class. https://en.cppreference.com/w/cpp/language/initializer_list#Delegating_constructor
+Note: another new feature to shorten constructors code is [Delegating Constructor](https://en.cppreference.com/w/cpp/language/initializer_list#Delegating_constructor). You can call one constructor from another if you need it. Look it up if you going to provide several constructors for a class. 
 
 ## Initialization in `if` statement
 New C++ adds optional section into `if` which is indentical to first section in `for` operator. 
@@ -485,6 +485,7 @@ Concepts
 ## Coroutines
 
 ## other?
+nested namespaces
 memory barriers
 explicit X::bool()
 cstdbool, cstdint, cinttypes
@@ -532,6 +533,57 @@ TBD
 TBD
 
 # References
-TBD
 
-https://youtu.be/QpFjOlzg1r4 C++ Weekly - Ep 190 - The Important Parts of C++17 in 10 Minutes
+## Best practices, tutorials, previews, conferences
+* http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines C++ Core Guidelines
+* https://www.youtube.com/user/BoostCon/ BoostCon (2014-2018)
+* https://www.youtube.com/user/lefticus1/playlists Jason Turner: playlists (C++17, C++20, lambdas, etc.)
+* https://www.youtube.com/user/CppCon/ CppCon (2015-2019)
+* https://www.youtube.com/channel/UCifgOu6ARWbZ_dV29gss8xw/ CoreHard (2016-2019)
+* https://www.youtube.com/user/MeetingCPP/ MeetingCpp (2014-2018)
+* https://www.youtube.com/channel/UCJhay24LTpO1s4bIZxuIqKw/ ACCU Conference (2016-2019)
+* https://www.youtube.com/channel/UCrRR5mU5aqvtZAuEGYfdTjw/ Pacific++ (2017-2018)
+* https://www.youtube.com/channel/UC_LAXFBuK7J2J6NLiYzdPEA/ SwedenCpp (2016-2019)
+* https://www.youtube.com/channel/UCTdw38Cw6jcm0atBPA39a0Q/ NDC Conference
+
+[C++20 Concepts are here...]: https://devblogs.microsoft.com/cppblog/c20-concepts-are-here-in-visual-studio-2019-version-16-3/ "C++20 Concepts Are Here in Visual Studio 2019 version 16.3"
+
+## Individual features
+* Concepts
+  * https://devblogs.microsoft.com/cppblog/c20-concepts-are-here-in-visual-studio-2019-version-16-3/ C++20 Concepts Are Here in Visual Studio 2019 version 16.3
+* `std::string_view`
+  * https://devblogs.microsoft.com/cppblog/stdstring_view-the-duct-tape-of-string-types/ std::string_view: The Duct Tape of String Types
+* `std::optional`
+  * https://devblogs.microsoft.com/cppblog/stdoptional-how-when-and-why/ std::optional: How, when, and why
+* Static code analysis, clang, `clang-tidy`, checking **C++ Core Guidelines**
+  * https://www.youtube.com/watch?v=zMrP8heIz3g&list=PLs3KjaCtOwSbij6EOk7K-ZgKKcxH7yVHC&index=7 Jason Turner: learning new C++ with help of static code analysis (video ##7-11)
+  * https://devblogs.microsoft.com/cppblog/addresssanitizer-asan-for-windows-with-msvc/ AddressSanitizer (ASan) for Windows with MSVC
+  * https://devblogs.microsoft.com/cppblog/code-analysis-with-clang-tidy-in-visual-studio/ Code analysis with clang-tidy in Visual Studio (VS2019)
+  * https://devblogs.microsoft.com/cppblog/exploring-clang-tooling-part-0-building-your-code-with-clang/ 
+Exploring Clang Tooling, Part 0: Building Your Code with Clang
+  * https://devblogs.microsoft.com/cppblog/exploring-clang-tooling-part-1-extending-clang-tidy/ Exploring Clang Tooling Part 1: Extending Clang-Tidy
+  * https://devblogs.microsoft.com/cppblog/exploring-clang-tooling-part-2-examining-the-clang-ast-with-clang-query/ Exploring Clang Tooling Part 2: Examining the Clang AST with clang-query
+  * https://devblogs.microsoft.com/cppblog/exploring-clang-tooling-part-3-rewriting-code-with-clang-tidy/ Exploring Clang Tooling Part 3: Rewriting Code with clang-tidy
+  * https://devblogs.microsoft.com/cppblog/exploring-clang-tooling-using-build-tools-with-clang-tidy/ Exploring Clang Tooling – Using Build Tools with clang-tidy
+  * https://devblogs.microsoft.com/cppblog/clang-llvm-support-for-msbuild-projects/ Clang/LLVM Support for MSBuild Projects
+  * https://docs.microsoft.com/en-us/visualstudio/code-quality/code-analysis-for-cpp-corecheck?view=vs-2019 C++ Core Guidelines Checker Reference
+  * https://devblogs.microsoft.com/cppblog/new-c-core-check-rules/ New C++ Core Check Rules
+  * https://docs.microsoft.com/en-us/visualstudio/code-quality/code-analysis-for-c-cpp-overview?view=vs-2019 Code analysis for C/C++ overview
+* `clang-format`
+  * https://devblogs.microsoft.com/cppblog/clangformat-support-in-visual-studio-2017-15-7-preview-1/ ClangFormat Support in Visual Studio 2017
+* Build system, containers, `Incredibuild`, `docker`
+  * https://devblogs.microsoft.com/cppblog/visualize-your-build-with-incredibuilds-build-monitor-and-visual-studio-2019/ Visualize your build with IncrediBuild’s Build Monitor and Visual Studio 2019
+  * https://devblogs.microsoft.com/cppblog/support-for-unity-jumbo-files-in-visual-studio-2017-15-8-experimental/ Support for Unity (Jumbo) Files in Visual Studio 2017 15.8 (Experimental)
+  * https://devblogs.microsoft.com/cppblog/using-vs-code-for-c-development-with-containers/ Using VS Code for C++ development with containers
+  * https://devblogs.microsoft.com/cppblog/using-multi-stage-containers-for-c-development/ Using multi-stage containers for C++ development
+  * https://devblogs.microsoft.com/cppblog/c-development-with-docker-containers-in-visual-studio-code/ C++ development with Docker containers in Visual Studio Code
+  * https://devblogs.microsoft.com/cppblog/using-msvc-in-a-docker-container-for-your-c-projects/ Using MSVC in a Docker Container for Your C++ Projects
+  * https://devblogs.microsoft.com/cppblog/shared-pch-usage-sample-in-visual-studio/ Shared PCH usage sample in Visual Studio
+* Modules
+  * https://devblogs.microsoft.com/cppblog/cpp-modules-in-visual-studio-2017/ Using C++ Modules in Visual Studio 2017
+* Spaceship `operator <=>`
+  * https://devblogs.microsoft.com/cppblog/simplify-your-code-with-rocket-science-c20s-spaceship-operator/ Simplify Your Code With Rocket Science: C++20’s Spaceship Operator
+* Ranges
+  * https://devblogs.microsoft.com/cppblog/use-the-official-range-v3-with-msvc-2017-version-15-9/ Use the official range-v3 with MSVC 2017 version 15.9
+* Algorithms
+  * https://devblogs.microsoft.com/cppblog/using-c17-parallel-algorithms-for-better-performance/ Using C++17 Parallel Algorithms for Better Performance
