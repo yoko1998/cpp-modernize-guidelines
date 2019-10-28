@@ -52,7 +52,7 @@ In most cases, this means to skip metaprogramming (unless it reduces code repeti
 Following are, probably, most simple things that made immediate impact on code readability and simplicity.
 
 ## `auto`
-* Use auto to reduce typing and easy reading, like to hold the temporary iterator
+* Use `auto` to reduce typing and easy reading, like to hold the temporary iterator
 ```C++
 //--------- Old style
 bool HasAsdInAsd(const PE::XyzCalculator::AsdContainer& vec)
@@ -71,7 +71,7 @@ bool HasAsdInAsd(const PE::XyzCalculator::AsdContainer& vec)
 ```
 see also "Initializer in `if`" section.
 
-* Use auto in lambda parameters to conserve on typing.
+* Use `auto` in lambda parameters to conserve on typing.
 ```C++
 //--------- motivational examples
 std::sort(intvec.begin(), intvec.end(),
@@ -98,7 +98,7 @@ std::map<std::string, XCalculator>::value toInsert = std::map<std::string, XCalc
 auto toInsert = std::map<std::string, XCalculator>::value{};
 ```
 
-(!) Note: **auto** is replacing type, but not it's **traits** (constness, reference). Please don't forget to write **const** and **&** when necessary. If you don't want to think much, use **auto&&** - this means "the same const as input container" and symbol && when next to auto called "forwarding reference".
+(!) Note: `auto` is replacing type, but not it's **traits** (constness, reference). Please don't forget to write **const** and **&** when necessary. If you don't want to think much, use `auto&&` - this means "the same const as input container" and symbol `&&` when next to `auto` called "forwarding reference".
 
 ## ranged `for`
 Instead of cumbersome and tedious specification of begin and end of container, now you could just specify container itself.
@@ -128,7 +128,7 @@ for(const auto&[title, config]: configCache.at(42))
 }
 ```
 Note: old style sample has mistake in interation which is impossible to make in new style.
-Note2: In the same way you could unpack not only std::pair, but any custom structures as well, for example, `FILETIME`, but it is less practical.
+Note2: In the same way you could unpack not only `std::pair`, but any custom structures as well, for example, `FILETIME`, but it is less practical.
 
 * Use structural bindings with specific STL algorithms and container methods.
 ```C++
@@ -136,7 +136,7 @@ auto [pCfg, inserted] = m_calConfigs.insert({"Asd", PECalculatorConfig()});
 if(!inserted)
    ErrorLog << "Using already existing: " << pCfg->Description();
 ```
-Insert was used here just for demo; in actual code prefer to use emplace and try_emplace in such cases instead.
+Insert was used here just for demo; in actual code prefer to use `emplace` and `try_emplace` in such cases instead.
 
 ```C++
 void f(std::string_view id, std::unique_ptr<Foo> foo) {
@@ -149,7 +149,15 @@ void f(std::string_view id, std::unique_ptr<Foo> foo) {
 ```
 
 ## `=default` and `=delete`
-In new standard you can explicitly re-use compiler default implementation for constructor, destructor or assignment operator, which will be most optimal for most data types.
+From compiler point of view, the ideal class is class without constructors and destructors. 
+Such class will be perfeclty optimized, [supplied with default constructed constructors, destructors and assignment operators](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#cctor-constructors-assignments-and-destructors) and such.
+They easy to read and undestand, also, usually, they tend to have value semantics and work well with standard containers.
+(All these known as "Rule of Zero").
+
+If you want explicitly mention constructor, destructor, assignment or move operator, in new C++ you have possibility to explicitly use default constructor implementation using keyword `= default`. (You might need it for example to place implementation of constructor into specific .cpp class to prevent it's reimplementation at user side for everyone included header).
+
+Note that if you touched any constructor or destructor, even if you just put empty body `{}` or added `virtual` entire class becomes custom. For this class ["Rule of Five(six)"](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rc-five) is now applied - you have to provide all other ctors or, potentialy, suffer consequences.
+
 ```C++
 // item.cpp
 Myclass::Myclass() = default; // generates all constuction code for Myclass once into item.obj
@@ -174,7 +182,10 @@ class NonCopiable:
 ```
 Note that beside copy ctor/assignment starting from C++11 there is also move ctor/assignment operators. But usually you don't have to block it as nothing bad should happen if you move entire object (unless it is extremely exotic, which is bad).
 
+In depth explanation: [C.ctor: Constructors, assignments, and destructors](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#cctor-constructors-assignments-and-destructors) []()
+
 ## Initialization in class definition
+[C.45: Don’t define a default constructor that only initializes data members; use member initializers instead](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Rc-default)
 ```C++
 // old.cpp
 MyClass::MyClass(): m_pi(3.14), m_p(4), m_dblDelta(0.), m_dblAlpha(m_dblDelta)
@@ -278,9 +289,9 @@ auto s = std::set<std::string>{"Hello", "World"};
 
 const static auto staticCalculators = std::map<std::string, int>{ {"undefined", -1}, {"LDN", 1}, {"NYK", 2}, {"XCCY", 13} };
 if (auto p = staticCalculators.find("LDN"); p != staticCalculators.end())
- return p->second;
+  return p->second;
 else
-		return staticCalculators.at("undefined");
+  return staticCalculators.at("undefined");
 
 ```
 You can pass curly brackets (`initializer_list`) wherever compiler allows you to create value on-the-fly. For example:
@@ -305,7 +316,7 @@ These changes are improving code correctness, improving performance, eliminating
 
 ## C++ Core Guideliness
 http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines contains extensive list of rules and best practices, created by prominent C++ figures (Bjarne Stroustrup, Herb Sutter, Scott Meyers, Titus Winters, Michael Park etc.) and covers most engineering choices you would want to made. Examples:
-* F.7: For general use, take T* or T& arguments rather than smart pointers
+* F.7: For general use, take `T*` or `T&` arguments rather than smart pointers
 * R.30: Take smart pointers as parameters only to explicitly express lifetime semantics
 * F.8: Prefer pure functions
 * F.9: Unused parameters should be unnamed
@@ -314,51 +325,57 @@ http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines contains extensive l
 * I.5: State preconditions (if any)
 * I.25: Prefer abstract classes as interfaces to class hierarchies
 * C.4: Make a function a member only if it needs direct access to the representation of a class
-* R.1: Manage resources automatically using resource handles and RAII (Resource Acquisition Is Initialization)
-* R.23: Use make_unique() to make unique_ptrs
+* R.1: Manage resources automatically using resource handles and **RAII** (Resource Acquisition Is Initialization)
+* R.23: Use `make_unique()` to make `unique_ptr`s
 * ES.20: Always initialize an object
 * ES.21: Don’t introduce a variable (or constant) before you need to use it
 * ES.22: Don’t declare a variable until you have a value to initialize it with
-* ES.23: Prefer the {}-initializer syntax
-* ES.71: Prefer a range-for-statement to a for-statement when there is a choice
+* ES.23: Prefer the `{}`-initializer syntax
+* ES.71: Prefer a range-`for`-statement to a for-statement when there is a choice
 * CPL.1: Prefer C++ to C
 * SF.7: Don’t write using namespace at global scope in a header file
 * SF.11: Header files should be self-contained
 * Appendix B: Modernizing code
 
-When in doubt, check Core Guideliness.
+When in doubt, check [Core Guideliness](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines).
 
 ## Unit tests
 * We have to protect business value of our code using different types of regression testing, and Unit Testing is important layer of it.
 * Just keeping Unit Testing in mind immediately producing better modular and less entangled code.
-* Allows to speed up development of separate code modules by providing a quick jump into module from unit tests.
-* Having code UT-ready also could make micro-benchmarking easy.
+* Allows to speed up development of separate code modules by providing a quick entry right into the module.
+* Having code UT-ready also encouranging micro-benchmarking, thus enabling to improve product performance.
 
 + mocking
 + common testing model, other layers of testing (see also Static Code Analysis)
 + replaying
 + fuzzing
 
-## override
+## `override`
 Keyword `override` is a must use for all overrides of virtual functions. This enables compiler to report errors in compile time when signature of function is actually not compatible with function overloaded. Old C++ just allowed unpredicted behavior of program in run-time instead (when called not the function you expected).
 Note: using `clang-tidy` or similar static code analyser it is possible to automatically update our code fitting `override` whenever necessary. After that we could continue manually support this habit, while time-to-time checking any misses using the tool again.
 
-## nullptr
+## `nullptr`
 `nullptr` must be used instead of NULL macro, no exception.
 Note that in new C++ some STL/Boost methods are specifically overloaded against `nullptr`.
+Visual Studio will highlight it in a nice distinct from macros color.
 
-## using
+## `using`
 Instead of `typedef` it is recomended to use new, more readable and versatile keyword `using`.
 ```C++
-// old
+// old - reading backwards or inside-out
 typedef StrongType<std::string, struct tagStrongString> StrongString;
-typedef HINSTANCE (*fpLoadLibrary)(char*);
-typedef int (*func)(int, int);
+typedef int (*summFuncPtr)(int, int);
 
-//new
+// new - reading left to right
 using StrongString = StrongType<std::string, struct tagStrongString>;
-using fpLoadLibrary = HINSTANCE(*)(char*);
-using func = int (*)(int x, int y);
+using summFuncPtr  = int (*)(int x, int y);
+```
+
+Also: you can make aliases for templates with partially supplied types.
+```C++
+template <class T> using Dictionary = std::map<std::string, T>;
+
+auto d = Dictionary<int>{ {"Asd", 42} }; // same as std::map<std::string, int>
 ```
 
 ## `[[nodiscard]]`
@@ -369,37 +386,52 @@ One of most interesting new attributes is `[[nodiscard]]` - return value marked 
 ```C++
 [[nodiscard]] bool CompareGraphs(Graph a, Graph b);
 [[nodiscard]] void* operator new(size_t _Size);
+
+new Graph(); // warning C4834:  discarding return value of function with 'nodiscard' attribute
+bool res = CompareGraphs(g1, g2); // OK
+CompareGraphs(g1, g2); // warning C4834:  discarding return value of function with 'nodiscard' attribute
 ```
+Other C++ generic attributes seems less useful.
+* `[[deprecated(message)]]` (provides compilation warning message for API you deprecate),
+* `[[fallthrough]]` (explicitly state you missing `break` in the `switch` on purpose),
+* `[[noreturn]]` (no return from function) and
+* `[[maybe_unused]]` (for cases when under compilation conditions or template instantiation marked input parameter maybe unused). 
+In C++20 will also appear 
+* `[[likely]]` (for if/switch branch which you want to optimize branch predictor) and 
+* `[[no_unique_address]]` (to re-use space wasted for alignment in structures for something useful).
 
-Another potentially usable attributes are [[deprecated]] (provides message for deprecated API), [[noreturn]] (no return from function) and [[maybe_unused]] (for cases when under conditions marked input parameter maybe unused). In C++20 will also appear [[likely]] and [[no_unique_address]] (for if/switch branch which you want to optimize branch predictor to and to re-use space wasted for alignment in structures for something useful).
-
-## decltype
-Sometimes you cannot use auto because you need to name type before actual assignment.
-For example you need a placeholder for future value.
-Or you constructing expected value in unittest for comparison.
-In this case you can easily extract type from variable itself with `decltype`.
+## `decltype`
+Sometimes you cannot use auto because you need somehow use this type first, for example you making *expected* value in unittest to compare it later with *actual* result, and this type is long and complex and tedious.
+You can easily clone type from variable with `decltype`.
 ```C++
-// create expected value of same type as calculated, but with predefined data
-const decltype(testobj.data.m_inputs) expected = 
- {{"RIC1", {}}, {"RIC2", {}}, {"RIC3", {"RIC", 123, "AC111"}}};
-// compare expected with actual result
+
+// InstrumentsDictionaries.cpp in product
+// somewhere: struct ExternalCodes {RicCode ric, Fido fido, ACCode ac};
+  std::unordered_map<ele::RicModified, ele::ExternalCodes> m_inputs;
+}
+
+// TestInstrumentsDictionaries.cpp in unit test
+const decltype(testobj.m_inputs) expected = 
+ {{"RIC1=", {}}, {"RIC2=", {}}, {"I12=ERX", {"I12=", 12345, "FU111"}}};
+
 ASSERT_EQ(expected, testobj.data.m_inputs);
 ```
-## enum classes
+## `enum class`es
+[Enum.3: Prefer class enums over “plain” enums](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Renum-class)
 
-## string_view
+## `std::string_view`
+[SL.str.2: Use std::string_view or gsl::string_span to refer to character sequences](http://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#slstr2-use-stdstring_view-or-gslstring_span-to-refer-to-character-sequences)
 
-## variant, any, optional
+## `std::variant`, `std::any`, `std::optional`
 
-## to_chars, from_chars
-
-## Boost --> STL: shared_ptr and others
+## Boost --> STL: `shared_ptr` and Co
 smart pointers (+deleters, aliases, array), unordered_map,...
 regex
 array, function
 filesystem
 chrono
 random
+to_string
 
 ## Literal prefixes
 "String"sv
@@ -442,10 +474,11 @@ const auto v = std::vector{ 1,2,3,4 }; // type becomes std::vector<int>
 ```
 
 ## `constexpr`
+TBD
 + static_assert
 if constexpr
 
-## Splicing maps and sets
+## Splicing `map`s and `set`s
 In new C++ there is a way to extract, move and insert nodes in alive containers without actually copying/moving/re-allocating the data.
 ```C++
 map<int, string> m{{1,"mango"}, {2,"papaya"}, {3,"guava"}};
@@ -455,14 +488,36 @@ m.insert(move(nh)); // m == {{1,"mango"}, {3,"guava"}, {4,"papaya"}}
 ```
 
 ## Move semantics
+TBD
 
 ## Lambda
+TBD
 
 ## Ranges
+```C++
+using namespace ranges;
+std::string s{"hello"};
+
+// output: h e l l o
+for_each(s, [](char c) { cout << c << ' '; });
+
+// sum == 385
+int sum = accumulate(
+    views::ints(1, unreachable) | 
+    views::transform([](int i) {return i * i;}) |
+    views::take(10),
+  0);
+```
+Full scale magic demo: https://github.com/ericniebler/range-v3/blob/master/example/calendar.cpp
+
+* https://github.com/ericniebler/range-v3/ P0896R4 "The One Ranges Proposal" (advanced, full scale, requires latest VS2019).
+* https://github.com/CaseyCarter/cmcstl2 P0896R4 "The One Ranges Proposal" (less demanding)
+* https://github.com/tcbrindle/NanoRange It is intended for users who want range-based goodness in their C++, but don't want to (or can't) use the full-blown Range-V3.
 
 ## Allocators, pmr
+TBD
 
-## Threads
+## Concurrency
 std::thread / std::jthread
 std::mutex / std::recursive_mutex / std::timed_mutex / std::shared_mutex
 std::atomic
@@ -470,9 +525,12 @@ std::condition_variable
 std::future
 std::lock_guard
 std::unique_lock
-std::async
+std::async / std::packaged_task
 std::future
-parallel algorithms
+### parallel algorithms
+TBD
+### Coroutines
+TBD
 
 ## Templates
 extern templates
@@ -481,11 +539,11 @@ type traits
 Concepts
 
 ## Modules
-
-## Coroutines
+TBD
 
 ## other?
 nested namespaces
+to_chars, from_chars
 memory barriers
 explicit X::bool()
 cstdbool, cstdint, cinttypes
@@ -501,6 +559,7 @@ Signed Integers are Two’s Complement
 clang-tidy
 coverity
 VS
+cppcheck
 
 ## Sanitizers
 ASan
@@ -508,10 +567,13 @@ UBSan
 TSan
 
 ## Benchmarks, instrumentation
+TBD
 
 ## Cross-compilation
+TBD
 
 ## Containerization
+TBD
 
 ## Tools know-how
 VS Code as editor
@@ -525,6 +587,7 @@ incredibuild
 include-what-you-using
 
 # Coding guidelines
+TBD
 
 ## Existing major coding guidelines
 TBD
