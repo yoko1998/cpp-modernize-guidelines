@@ -35,7 +35,7 @@ Highlighted options
 Highlighted extensions
 ---------------------
 * Python - python language support from Microsoft, must have (#1 in popular)
-* Python Docstring Generator - """ generator
+* Python Docstring Generator - ```"""``` generator
 
 Extensions to check and see
 ---------------------
