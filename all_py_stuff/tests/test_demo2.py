@@ -1,4 +1,4 @@
-from _context import megasecret
+from context import megasecret # type: ignore
 
 
 def test_hello():
