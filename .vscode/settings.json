@@ -1,0 +1,14 @@
+{
+    "python.formatting.provider": "black",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/.pytest_cache": true,
+        "**/.vs": true,
+        "**/__pycache__": true
+    },
+    "explorerExclude.backup": null
+}

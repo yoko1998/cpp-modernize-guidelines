@@ -1,10 +1,3 @@
-if __name__ == "__main__":
-    import sys
-
-    print("-" * 50)
-    print(f"Hello, World! From {sys.executable}")
-
-
 def generate_secret(yourname: str) -> str:
     """Generates very secret password based on your name
 
@@ -16,3 +9,15 @@ def generate_secret(yourname: str) -> str:
     """
     return "secret" + yourname
 
+
+def generate_hello() -> str:
+    import sys
+
+    return f"Hello, World! From {sys.executable}"
+
+
+if __name__ == "__main__":
+    import sys
+
+    print("-" * 50)
+    print(generate_hello())
