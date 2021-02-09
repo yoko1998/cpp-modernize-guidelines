@@ -34,7 +34,7 @@ Highlighted options
 
 Highlighted extensions
 ---------------------
-* Python - python language support from Microsoft, must have (#1 in popular)
+* Python + Pylance - python language support from Microsoft, must have (#1 in popular)
 * Python Docstring Generator - ```"""``` generator
 
 Extensions to check and see
@@ -43,7 +43,9 @@ Extensions to check and see
 * BetterComment
   * 🔴 !
   * 🔵 ?
+  * 🟢 *
   * 🟡 TODO:
+  * -- //// (commented-out)
 * AREPL - quick preview of code result
 * ⁇ Icon schemes
 * ⁇ Python Test Explorer - probably better pytest integrator, TBD
@@ -51,6 +53,7 @@ Extensions to check and see
 * ⁇ GitLens - additional git-related tooltips/markup
 * ⁇ Code Runner - probably better generator of run configuration, TBD
 * ⁇ python snippets - TBD
+* Insert Unicode - for fun
 
 Highlighted GUI and workchain features
 ---------------------
@@ -65,6 +68,8 @@ cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\Ex
 call activate
 conda init
 ```
+* To use shared environment .yaml on a project? to disable PIP on a project level?
+
 Highlighted Python core features
 ---------------------
 
