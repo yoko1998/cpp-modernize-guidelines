@@ -11,13 +11,17 @@ def generate_secret(yourname: str) -> str:
 
 
 def generate_hello() -> str:
-    import sys
+    """Generates hello from the binary depth
 
+    Returns:
+        str: appreciation message
+    """
+    import sys
     return f"Hello, World! From {sys.executable}"
 
 
 if __name__ == "__main__":
-    import sys
-
+    """Welcome from the binary depth of config hell
+    """
     print("-" * 50)
     print(generate_hello())
